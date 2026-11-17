@@ -207,6 +207,9 @@ const CENTER_R=50;
 const MAX_SPEED=17,MAX_DRAG=130,PCURVE=1.25;   // 弾きの強さ（最大速度・引き距離・パワー曲線）
 const FR_P=0.972,FR_B=0.98,STOP=0.06,REST_WALL=0.72,REST_BODY=0.9;
 const M_P=1,M_B=0.55,SUB=4,WIN=3;
+// 吹っ飛びすぎ防止：打った駒以外は「重く・止まりやすく」する
+const M_IDLE=2.0;      // 打っていない駒の重さ（打った駒=1、ボール=0.55）
+const FR_IDLE=0.958;   // 打っていない駒の減速率（打った駒は FR_P）
 const CURVE=0.035,SPIN_DECAY=0.97,SPIN_XFER=0.45;   // スピン：1ステップの曲がり角の係数・減衰率・衝突で相手へ移る割合
 const COL={A:'#3d8bfd',B:'#ff5a5a'},SHADE={A:'#2563c9',B:'#c93636'},LIGHT={A:'#9cc7ff',B:'#ffb3b3'};
 const speedOf=pw=>MAX_SPEED*Math.pow(pw,PCURVE);
@@ -291,7 +294,7 @@ function step(bs,fx){
     if(ball.y<-ball.r)return 'A';
     if(ball.y>H+ball.r)return 'B';
   }
-  for(const b of bs){const f=b.ball?FR_B:FR_P;b.vx*=f;b.vy*=f;
+  for(const b of bs){const f=b.ball?FR_B:b.m>M_P?FR_IDLE:FR_P;b.vx*=f;b.vy*=f;
     curve(b);
     if(b.vx*b.vx+b.vy*b.vy<STOP*STOP){b.vx=0;b.vy=0;b.spin=0}}
   return null;
@@ -332,7 +335,7 @@ function evaluate(bs,goal,team,bx0,by0){
 }
 function simulate(idx,ang,pw,team,spin){
   const bs=S.bodies.map(b=>({...b}));
-  const p=bs[idx],v=speedOf(pw);p.vx=Math.cos(ang)*v;p.vy=Math.sin(ang)*v;p.spin=spin||0;
+  prepShot(bs,idx);const p=bs[idx],v=speedOf(pw);p.vx=Math.cos(ang)*v;p.vy=Math.sin(ang)*v;p.spin=spin||0;
   const bx0=bs[0].x,by0=bs[0].y;let goal=null;
   for(let t=0;t<500;t++){goal=step(bs);if(goal||stopped(bs))break}
   return evaluate(bs,goal,team,bx0,by0);
@@ -441,7 +444,10 @@ function shoot(idx,ang,pw,spin){
   S.sel=null;setSpin(0);
 }
 // 速度を直接与えて打つ（オンラインでは速度ベクトルをそのまま送受信して結果を一致させる）
+// 打つ直前に重さを設定（オンラインでも両端末で同じ処理をするので結果は一致する）
+function prepShot(bs,idx){for(const b of bs)if(!b.ball)b.m=M_IDLE;bs[idx].m=M_P}
 function launch(idx,vx,vy,spin){
+  prepShot(S.bodies,idx);
   const p=S.bodies[idx];p.vx=vx;p.vy=vy;p.spin=spin||0;
   const sp=Math.hypot(vx,vy),pw=Math.min(1,sp/MAX_SPEED),ang=Math.atan2(vy,vx);
   S.phase='moving';S.steps=0;updTurn();
