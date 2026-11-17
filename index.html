@@ -208,8 +208,9 @@ const MAX_SPEED=17,MAX_DRAG=130,PCURVE=1.25;   // 弾きの強さ（最大速度
 const FR_P=0.972,FR_B=0.98,STOP=0.06,REST_WALL=0.72,REST_BODY=0.9;
 const M_P=1,M_B=0.55,SUB=4,WIN=3;
 // 吹っ飛びすぎ防止：打った駒以外は「重く・止まりやすく」する
-const M_IDLE=2.0;      // 打っていない駒の重さ（打った駒=1、ボール=0.55）
-const FR_IDLE=0.958;   // 打っていない駒の減速率（打った駒は FR_P）
+const M_IDLE=3.5;      // 打っていない駒の重さ（打った駒=1、ボール=0.55）
+const FR_IDLE=0.935;   // 打っていない駒の減速率（打った駒は FR_P）
+const REST_PP=0.6;     // 駒どうしの反発係数（ボールが絡む衝突は REST_BODY のまま）
 const CURVE=0.035,SPIN_DECAY=0.97,SPIN_XFER=0.45;   // スピン：1ステップの曲がり角の係数・減衰率・衝突で相手へ移る割合
 const COL={A:'#3d8bfd',B:'#ff5a5a'},SHADE={A:'#2563c9',B:'#c93636'},LIGHT={A:'#9cc7ff',B:'#ffb3b3'};
 const speedOf=pw=>MAX_SPEED*Math.pow(pw,PCURVE);
@@ -253,7 +254,7 @@ function collide(a,b){
   const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,ov=rr-d,tm=a.m+b.m;
   a.x-=nx*ov*b.m/tm;a.y-=ny*ov*b.m/tm;b.x+=nx*ov*a.m/tm;b.y+=ny*ov*a.m/tm;
   const rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
-  if(rv<0){const j=-(1+REST_BODY)*rv/(1/a.m+1/b.m);
+  if(rv<0){const e=(a.ball||b.ball)?REST_BODY:REST_PP,j=-(1+e)*rv/(1/a.m+1/b.m);
     a.vx-=j*nx/a.m;a.vy-=j*ny/a.m;b.vx+=j*nx/b.m;b.vy+=j*ny/b.m;
     const ds=(a.spin-b.spin)*SPIN_XFER;if(ds){a.spin-=ds;b.spin+=ds}   // 回転の受け渡し
     return j}
