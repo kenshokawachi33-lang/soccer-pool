@@ -34,18 +34,19 @@ html,body{height:100%;overflow:hidden;background:#245c39;color:var(--ink);font-f
 .turnbar.B{left:50%;background:var(--B);opacity:1}
 
 #spinBar{display:none;flex:none;align-items:center;gap:8px;margin:0 10px calc(8px + env(safe-area-inset-bottom));padding:6px 10px;border-radius:14px;background:var(--cream);border:3px solid var(--ol);box-shadow:3px 3px 0 var(--ol)}
-#spinBar.dis{opacity:.45;pointer-events:none}
-#spinBar .sl{font-size:13px}
-#spinBar .sd{font-weight:800;font-size:16px}
-.srange{flex:1;position:relative;height:30px;display:flex;align-items:center}
-.smid{position:absolute;left:50%;top:5px;bottom:5px;width:3px;margin-left:-1.5px;background:var(--ol);border-radius:2px;pointer-events:none}
-#spinR{-webkit-appearance:none;appearance:none;width:100%;height:12px;margin:0;border-radius:99px;border:2.5px solid var(--ol);background:linear-gradient(90deg,#9cc7ff,#fff 50%,#ffd43b);outline:none;position:relative}
-#spinR::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ol);box-shadow:2px 2px 0 var(--ol);cursor:pointer}
-#spinR::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ol);box-shadow:2px 2px 0 var(--ol)}
-#spinBar.act #spinR::-webkit-slider-thumb{background:var(--yel)}
-#spinBar.act #spinR::-moz-range-thumb{background:var(--yel)}
-.s0{width:30px;height:30px;border-radius:9px;border:2.5px solid var(--ol);background:#fff;font:800 13px "M PLUS Rounded 1c",sans-serif;color:var(--ink);flex:none}
-#spinBar .sv{font-size:11px;font-weight:800;width:50px;white-space:nowrap;text-align:center;color:var(--mut)}
+#spinBar.dis{opacity:.45}
+#spinBar.flip{transform:rotate(180deg);margin:2px 10px 6px}
+#spinBar.dis button{pointer-events:none}
+.sdir{display:flex;gap:4px;flex:none}
+.sdir button{width:40px;height:34px;border-radius:10px;border:2.5px solid var(--ol);background:#fff;font:800 17px "M PLUS Rounded 1c",sans-serif;color:var(--ink)}
+.sdir button.on{background:var(--yel)}
+.srange{flex:1;display:flex;align-items:center}
+.sgauge{position:relative;width:100%;height:18px;border-radius:99px;border:2.5px solid var(--ol);background:#fff;overflow:hidden}
+.sgauge.off{opacity:.35}
+.sfill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#5cd15a,#ffd43b 60%,#ff5a5a)}
+.smax{position:absolute;right:0;top:0;bottom:0;width:8%;background:repeating-linear-gradient(45deg,rgba(28,43,34,.25) 0 3px,transparent 3px 6px)}
+#spinBar.max .sgauge{box-shadow:0 0 0 3px #ffd43b}
+#spinBar .sv{font-size:11px;font-weight:800;width:54px;white-space:nowrap;text-align:center;color:var(--mut)}
 #stage{touch-action:none;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;position:relative}
 canvas{touch-action:none;display:block}
 #turn{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:800;padding:4px 14px;border-radius:99px;background:var(--cream);color:var(--ink);border:3px solid var(--ol);box-shadow:2px 2px 0 var(--ol);pointer-events:none;z-index:2;white-space:nowrap}
@@ -103,6 +104,13 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
 .pl .st.ok{background:var(--grn)}.pl.wait{opacity:.55;border-style:dashed}
 .sub{font-size:12px;color:var(--mut);margin:-4px 0 12px;line-height:1.6}
 .err{color:#c62828}
+/* ---- loading（画像の読み込みが終わるまで表示。読み込み前の仮の絵が一瞬見えるのを防ぐ）---- */
+#loading{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background-color:#3a9a55;background-image:repeating-linear-gradient(180deg,rgba(255,255,255,.07) 0 44px,transparent 44px 88px);transition:opacity .35s}
+#loading.hide{opacity:0;pointer-events:none}
+.ld-ball{width:54px;height:54px;border-radius:50%;background:#fff;border:4px solid var(--ol);box-shadow:4px 4px 0 var(--ol);position:relative;animation:ldb .7s ease-in-out infinite alternate}
+.ld-ball::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;background:var(--ol);clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)}
+@keyframes ldb{from{transform:translateY(0) rotate(0)}to{transform:translateY(-16px) rotate(180deg)}}
+.ld-txt{font:800 14px "M PLUS Rounded 1c",sans-serif;letter-spacing:.3em;color:#fff;text-shadow:2px 2px 0 var(--ol)}
 /* ---- banners ---- */
 #banner{position:fixed;left:0;right:0;top:36%;text-align:center;pointer-events:none;z-index:5;display:none}
 #banner.show{display:block}
@@ -118,6 +126,7 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
 </style>
 </head>
 <body>
+<div id="loading"><div class="ld-ball"></div><div class="ld-txt">LOADING</div></div>
 <div id="app">
   <header id="hud">
     <button class="iconbtn" id="menuBtn" aria-label="メニュー"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2b22" stroke-width="2.4" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button>
@@ -131,11 +140,8 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
   </header>
   <div id="stage"><div id="turn">—</div><canvas id="cv"></canvas></div>
   <div id="spinBar">
-    <span class="sl dg">SPIN</span>
-    <span class="sd">↶</span>
-    <div class="srange"><div class="smid"></div><input type="range" id="spinR" min="-100" max="100" step="1" value="0" aria-label="スピンの強さ（左がマイナス、右がプラス）"></div>
-    <span class="sd">↷</span>
-    <button class="s0" id="spin0" aria-label="スピンを0に戻す">0</button>
+    <div class="sdir" id="sdir"><button data-d="-1" aria-label="左カーブ">↶</button><button data-d="0" class="on" aria-label="スピンなし">・</button><button data-d="1" aria-label="右カーブ">↷</button></div>
+    <div class="srange"><div class="sgauge" id="sgauge"><div class="sfill" id="sfill"></div><div class="smax"></div></div></div>
     <span class="sv" id="spinTxt">なし</span>
   </div>
   <div id="formPanel">
@@ -147,8 +153,8 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
 </div>
 
 <div class="overlay show" id="menu"><div class="card">
-  <img id="logoImg" alt=""><div class="logo" id="logoBall"><svg viewBox="0 0 64 64"><defs><radialGradient id="bg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#eef2f7"/><stop offset="1" stop-color="#9aa4b1"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="#fff" stroke="#1c2b22" stroke-width="4"/><path d="M32 20l11 8-4 13H25l-4-13z" fill="#1c2b22"/><path d="M32 2v10M58 22l-9 5M50 56l-6-8M14 56l6-8M6 22l9 5" stroke="#1c2b22" stroke-width="4" stroke-linecap="round"/></svg></div>
-  <h1 class="dg" id="logoText">SOCCER<br>POOL</h1>
+  <img id="logoImg" alt=""><div class="logo" id="logoBall" style="display:none"><svg viewBox="0 0 64 64"><defs><radialGradient id="bg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#eef2f7"/><stop offset="1" stop-color="#9aa4b1"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="#fff" stroke="#1c2b22" stroke-width="4"/><path d="M32 20l11 8-4 13H25l-4-13z" fill="#1c2b22"/><path d="M32 2v10M58 22l-9 5M50 56l-6-8M14 56l6-8M6 22l9 5" stroke="#1c2b22" stroke-width="4" stroke-linecap="round"/></svg></div>
+  <h1 class="dg" id="logoText" style="display:none">SOCCER<br>POOL</h1>
   <div class="tag">5 VS 5 · FLICK FOOTBALL</div>
   <div class="label">MODE</div>
   <div class="seg" id="modeSeg"><button data-v="cpu" class="on">CPU対戦</button><button data-v="pvp">2人対戦</button><button data-v="online">オンライン</button></div>
@@ -202,15 +208,15 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
 (()=>{
 // ===== 定数 =====
 const W=360,H=600,M=36,SM=16;
-const R=18,BR=11,GW=110,GX1=(W-GW)/2,GX2=GX1+GW,GD=28,POST=4;
+const R=18,BR=11,GW=140,GX1=(W-GW)/2,GX2=GX1+GW,GD=30,POST=4;   // GW=ゴール幅（旧110）
 const CENTER_R=50;
 const MAX_SPEED=17,MAX_DRAG=130,PCURVE=1.25;   // 弾きの強さ（最大速度・引き距離・パワー曲線）
 const FR_P=0.972,FR_B=0.98,STOP=0.06,REST_WALL=0.72,REST_BODY=0.9;
 const M_P=1,M_B=0.55,SUB=4,WIN=3;
 // 吹っ飛びすぎ防止：打った駒以外は「重く・止まりやすく」する
-const M_IDLE=3.5;      // 打っていない駒の重さ（打った駒=1、ボール=0.55）
-const FR_IDLE=0.935;   // 打っていない駒の減速率（打った駒は FR_P）
-const REST_PP=0.6;     // 駒どうしの反発係数（ボールが絡む衝突は REST_BODY のまま）
+const M_IDLE=2.6;      // 打っていない駒の重さ（打った駒=1、ボール=0.55）
+const FR_IDLE=0.947;   // 打っていない駒の減速率（打った駒は FR_P）
+const REST_PP=0.72;     // 駒どうしの反発係数（ボールが絡む衝突は REST_BODY のまま）
 const CURVE=0.035,SPIN_DECAY=0.97,SPIN_XFER=0.45;   // スピン：1ステップの曲がり角の係数・減衰率・衝突で相手へ移る割合
 const COL={A:'#3d8bfd',B:'#ff5a5a'},SHADE={A:'#2563c9',B:'#c93636'},LIGHT={A:'#9cc7ff',B:'#ffb3b3'};
 const speedOf=pw=>MAX_SPEED*Math.pow(pw,PCURVE);
@@ -314,9 +320,9 @@ function curve(b){
 const stopped=bs=>bs.every(b=>b.vx===0&&b.vy===0);
 
 // ===== CPU =====
-const AI={easy:{pieces:2,rand:5,powers:[.6,1],noise:.14,ghost:1,spins:[0]},
-  normal:{pieces:5,rand:10,powers:[.55,.8,1],noise:.07,ghost:3,spins:[0]},
-  hard:{pieces:5,rand:10,powers:[.55,.8,1],noise:.03,ghost:5,spins:[0,-1,1]}};
+const AI={easy:{pieces:2,rand:5,powers:[.6,1],noise:.2,ghost:1,spins:[0]},
+  normal:{pieces:5,rand:10,powers:[.55,.8,1],noise:.12,ghost:3,spins:[0]},
+  hard:{pieces:5,rand:10,powers:[.55,.8,1],noise:.085,ghost:5,spins:[0,-1,1]}};
 function evaluate(bs,goal,team,bx0,by0){
   if(goal===team)return 1e5;
   if(goal)return -1e5;
@@ -491,7 +497,7 @@ function updTurn(){
   const el=$('turn'),tb=$('turnbar');
   if(S.screen!=='play'){el.style.display=S.screen==='form'?'block':'none';el.textContent='FORMATION';el.style.background='#fff8e7';el.style.color='#1c2b22';tb.className='turnbar';return}
   el.style.display='block';tb.className='turnbar '+S.turn;
-  el.textContent=S.phase==='cpu'?'CPU 思考中…':S.phase==='moving'?'・・・':S.phase==='aim'?`${labelJ(S.turn)}の番｜${S.sel==null?'駒をタップ':'画面を引いて発射'}`:S.phase==='remote'?`${labelJ(S.turn)}の番`:'';
+  el.textContent=S.phase==='cpu'?'CPU 思考中…':S.phase==='moving'?'・・・':S.phase==='aim'?`${labelJ(S.turn)}の番｜${S.sel==null?'駒をタップ':(S.spinDir?'引いてゲージを見て離す':'引いて発射')}`:S.phase==='remote'?`${labelJ(S.turn)}の番`:'';
   el.style.display=el.textContent?'block':'none';
   const on=S.phase==='aim'||S.phase==='cpu'||S.phase==='remote';
   el.style.background=on?COL[S.turn]:'#fff8e7';el.style.color=on?'#fff':'#1c2b22';
@@ -581,12 +587,22 @@ const ASSETS={
 };
 const IMG={};
 function loadAssets(){
-  for(const [k,src] of Object.entries(ASSETS)){if(!src)continue;
-    const im=new Image();im.onload=()=>{IMG[k]=im;
+  // すべての画像（とフォント）がそろってから一度だけ描き直し、ローディング画面を消す
+  const list=Object.entries(ASSETS).filter(([k,src])=>src);
+  let left=list.length+1,finished=false;
+  const finish=()=>{if(finished)return;finished=true;resize();$('loading').classList.add('hide');setTimeout(()=>$('loading').remove(),400)};
+  const done=()=>{if(--left<=0)finish()};
+  for(const [k,src] of list){
+    const im=new Image();
+    im.onload=()=>{IMG[k]=im;
       if(k==='menuBg')$('menu').style.backgroundImage=`url(${src})`;
       else if(k==='logo'){const l=$('logoImg');l.src=src;l.style.display='block';$('logoText').style.display='none';$('logoBall').style.display='none'}
-      else resize()};
+      done()};
+    im.onerror=()=>{if(k==='logo'){$('logoText').style.display='';$('logoBall').style.display=''}done()};
     im.src=src}
+  const f=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();
+  Promise.race([f,new Promise(r=>setTimeout(r,2500))]).then(done);
+  setTimeout(()=>{if(!IMG.logo){$('logoText').style.display='';$('logoBall').style.display=''}finish()},6000);  // 通信が遅いときの保険
 }
 
 // ===== 描画：キャッシュ =====
@@ -646,8 +662,8 @@ function buildField(){
   c.beginPath();c.arc(W/2,H/2,CENTER_R,0,7);c.stroke();
   for(const top of [true,false]){
     const y0=top?6:H-6,s=top?1:-1;
-    c.beginPath();c.moveTo((W-210)/2,y0);c.lineTo((W-210)/2,y0+s*88);c.lineTo((W+210)/2,y0+s*88);c.lineTo((W+210)/2,y0);c.stroke();
-    c.beginPath();c.moveTo((W-150)/2,y0);c.lineTo((W-150)/2,y0+s*34);c.lineTo((W+150)/2,y0+s*34);c.lineTo((W+150)/2,y0);c.stroke();
+    c.beginPath();c.moveTo((W-250)/2,y0);c.lineTo((W-250)/2,y0+s*88);c.lineTo((W+250)/2,y0+s*88);c.lineTo((W+250)/2,y0);c.stroke();
+    c.beginPath();c.moveTo((W-190)/2,y0);c.lineTo((W-190)/2,y0+s*34);c.lineTo((W+190)/2,y0+s*34);c.lineTo((W+190)/2,y0);c.stroke();
     c.beginPath();top?c.arc(W/2,y0+88,30,.18*Math.PI,.82*Math.PI):c.arc(W/2,y0-88,30,1.18*Math.PI,1.82*Math.PI);c.stroke();
     c.fillStyle='#fff';c.beginPath();c.arc(W/2,y0+s*62,2.6,0,7);c.fill();
   }
@@ -708,8 +724,10 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>resize());
 // ===== 描画：毎フレーム =====
 function pent(c,x,y,r,rot){c.beginPath();for(let k=0;k<5;k++){const a=rot+k*1.2566;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath();c.fill()}
 function drawShadow(b,r){const f=S.flip?-1:1;ctx.fillStyle='rgba(20,40,25,.28)';ctx.beginPath();ctx.ellipse(b.x+3*f,b.y+4*f,r,r*.92,0,0,7);ctx.fill()}
-function outlinedText(txt,x,y,font,fill,lw){
-  ctx.save();ctx.translate(x,y);if(S.flip)ctx.rotate(Math.PI);   // 反転表示でも文字は正立
+// 2人対戦では赤（2P）は向かいに座るので、赤の駒まわりの文字は上下逆にする
+const invText=b=>S.mode==='pvp'&&b&&b.team==='B';
+function outlinedText(txt,x,y,font,fill,lw,inv){
+  ctx.save();ctx.translate(x,y);if(S.flip!==!!inv)ctx.rotate(Math.PI);   // 反転表示でも文字は読む人に向けて正立
   ctx.font=font;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
   ctx.strokeStyle=OL;ctx.lineWidth=lw;ctx.strokeText(txt,0,0);ctx.fillStyle=fill;ctx.fillText(txt,0,0);ctx.restore();
 }
@@ -720,7 +738,7 @@ function drawPiece(b,dim,glow,sel,t){
     ctx.beginPath();ctx.arc(b.x,b.y,R+6,0,7);ctx.stroke();ctx.lineWidth=3;ctx.strokeStyle=LIGHT[b.team];ctx.stroke();ctx.restore()}
   ctx.save();ctx.translate(b.x,b.y);if(S.flip)ctx.rotate(Math.PI);ctx.drawImage(SPR[(b.n===1?'G':'')+b.team],-half,-half,half*2,half*2);ctx.restore();
   if(sel){ctx.beginPath();ctx.arc(b.x,b.y,R*sc+4,0,7);ctx.lineWidth=5;ctx.strokeStyle=OL;ctx.stroke();ctx.lineWidth=3;ctx.strokeStyle='#ffd43b';ctx.stroke()}
-  outlinedText(b.n===1?'GK':String(b.n),b.x,b.y+1,(b.n===1?'10px':'13px')+' "Dela Gothic One"','#fff',3);
+  const iv=invText(b);outlinedText(b.n===1?'GK':String(b.n),b.x,b.y+(S.flip!==iv?-1:1),(b.n===1?'10px':'13px')+' "Dela Gothic One"','#fff',3,iv);
   ctx.globalAlpha=1;
 }
 function drawBall(b){
@@ -751,12 +769,12 @@ function previewPath(p,ang,pw,spin,n){
   }
   return pts;
 }
-function drawAim(p,ang,pw,anchor,pt,spin){
+function drawAim(p,ang,pw,anchor,pt,spin,path){
   const c=powColor(pw);spin=spin||0;
   ctx.lineCap='round';ctx.lineJoin='round';
-  if(anchor&&pt){ // 引っ張り始めた点→指の位置（ゴムひも）
+  if(anchor&&pt){ // 指でなぞった軌跡（曲がりがスピンになる）と、引き始め→指の直線
     ctx.beginPath();ctx.moveTo(anchor.x,anchor.y);ctx.lineTo(pt.x,pt.y);
-    ctx.strokeStyle=OL;ctx.lineWidth=5;ctx.stroke();ctx.strokeStyle='#fff8e7';ctx.lineWidth=2.5;ctx.stroke();
+    ctx.strokeStyle=OL;ctx.lineWidth=5;ctx.stroke();ctx.strokeStyle=spin?'#ffd43b':'#fff8e7';ctx.lineWidth=2.5;ctx.stroke();
     ctx.fillStyle='rgba(255,248,231,.5)';ctx.beginPath();ctx.arc(anchor.x,anchor.y,7,0,7);ctx.fill();ctx.strokeStyle=OL;ctx.lineWidth=2;ctx.stroke();
     ctx.fillStyle='#fff8e7';ctx.beginPath();ctx.arc(pt.x,pt.y,6,0,7);ctx.fill();ctx.stroke()}
   // パワーリング
@@ -772,7 +790,7 @@ function drawAim(p,ang,pw,anchor,pt,spin){
     ctx.beginPath();ctx.moveTo(ex+ca*11,ey+sa*11);ctx.lineTo(ex+Math.cos(a2+2.5)*11,ey+Math.sin(a2+2.5)*11);
     ctx.lineTo(ex+ca*2,ey+sa*2);ctx.lineTo(ex+Math.cos(a2-2.5)*11,ey+Math.sin(a2-2.5)*11);ctx.closePath();
     ctx.fillStyle=c;ctx.fill();ctx.strokeStyle=OL;ctx.lineWidth=2.5;ctx.stroke()}
-  outlinedText(Math.round(pw*100)+'%',p.x,p.y+(S.flip?R+22:-R-22),'12px "Dela Gothic One"',c,4);
+  const iv=invText(p),up=S.flip!==iv;outlinedText(Math.round(pw*100)+'%',p.x,p.y+(up?R+22:-R-22),'12px "Dela Gothic One"',c,4,iv);
 }
 function drawStar(p){const a=1-p.life/p.max,e=Math.min(1,p.life/4),r=p.r*e;
   ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=Math.min(1,a*1.6);ctx.beginPath();
@@ -823,7 +841,8 @@ function draw(t){
     else{ctx.globalAlpha=Math.min(1,a*2);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeStyle=OL;ctx.lineWidth=1;ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()}
   }
   ctx.globalAlpha=1;
-  if(S.aim&&S.aim.pw>0.06)drawAim(bs[S.aim.idx],S.aim.ang,S.aim.pw,S.aim.anchor,S.aim.pt,spinVal());
+  if(S.aim&&S.spinDir){const g=gaugeAt(S.aim.t0);S.aim.spin=S.spinDir*g;showGauge(g)}
+  if(S.aim&&S.aim.pw>0.06)drawAim(bs[S.aim.idx],S.aim.ang,S.aim.pw,S.aim.anchor,S.aim.pt,S.aim.spin);
   if(S.cpuAim){const k=Math.min(1,(performance.now()-S.cpuAim.t0)/450);drawAim(bs[S.cpuAim.idx],S.cpuAim.ang,S.cpuAim.pw*k,null,null,S.cpuAim.spin||0)}
 }
 
@@ -866,40 +885,46 @@ STG.addEventListener('pointerdown',e=>{
     let cand=null;
     if(i>=0&&S.sel==null){SE.pick();S.sel=i;updTurn()}
     else if(i>=0&&i!==S.sel)cand=i;
-    if(S.sel!=null){S.aim={idx:S.sel,ang:0,pw:0,anchor:p,pt:p,cand};STG.setPointerCapture(e.pointerId)}}
+    if(S.sel!=null){S.aim={idx:S.sel,ang:0,pw:0,anchor:p,pt:p,cand,spin:0,t0:performance.now()};STG.setPointerCapture(e.pointerId)}}
 });
 STG.addEventListener('pointermove',e=>{
   const p=pos(e);
   if(S.drag){const t=S.editTeam,q=clampPiece(t,S.drag.k,{x:p.x,y:p.y});
     S.forms[t][S.drag.k]=toNorm(t,q);if(S.preset[t]!=='カスタム'){S.preset[t]='カスタム';renderTabs()}S.bodies=makeBodies()}
   else if(S.aim){const dx=S.aim.anchor.x-p.x,dy=S.aim.anchor.y-p.y;
-    S.aim.ang=Math.atan2(dy,dx);S.aim.pw=Math.min(Math.hypot(dx,dy),MAX_DRAG)/MAX_DRAG;S.aim.pt=p}
+    S.aim.ang=Math.atan2(dy,dx);S.aim.pw=Math.min(Math.hypot(dx,dy),MAX_DRAG)/MAX_DRAG;S.aim.pt=p;
+  }
 });
 function up(){
   if(S.drag){S.drag=null;saveForms();renderTabs()}
   if(S.aim){const a=S.aim;S.aim=null;
-    if(a.pw>0.06&&S.phase==='aim')shoot(a.idx,a.ang,a.pw,spinVal());
-    else if(a.cand!=null){SE.pick();S.sel=a.cand;updTurn()}}
+    const g=S.spinDir?Math.round(gaugeAt(a.t0)*100)/100:0;   // 離した瞬間のゲージ値
+    if(a.pw>0.06&&S.phase==='aim')shoot(a.idx,a.ang,a.pw,S.spinDir*g);
+    else{showGauge(0);if(a.cand!=null){SE.pick();S.sel=a.cand;updTurn()}}}
 }
 STG.addEventListener('pointerup',up);STG.addEventListener('pointercancel',()=>{S.drag=null;S.aim=null});
-// スピン選択バー
-// スピンは -1（左カーブ最大）〜 +1（右カーブ最大）の連続値。0付近は0に吸着。
-S.spinV=0;
-const spinVal=()=>S.spinV;
-function setSpin(v){
-  v=Math.max(-1,Math.min(1,v));if(Math.abs(v)<0.06)v=0;S.spinV=Math.round(v*100)/100;
-  $('spinR').value=Math.round(S.spinV*100);
-  $('spinTxt').textContent=S.spinV===0?'なし':(S.spinV<0?'左 ':'右 ')+Math.round(Math.abs(S.spinV)*100)+'%';
-  $('spinBar').classList.toggle('act',S.spinV!==0);
+// スピン：方向をボタンで選び、強さは「引っ張っている間に往復するゲージ」を離したタイミングで決まる
+const SPIN_PERIOD=1300;   // ゲージが 0→100%→0 と1往復する時間(ms)
+S.spinDir=0;
+const gaugeAt=t0=>{const ph=((performance.now()-t0)/SPIN_PERIOD)%1;return ph<.5?ph*2:2-ph*2};
+function setDir(d){S.spinDir=d;document.querySelectorAll('#sdir button').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));showGauge(0);if(typeof updTurn==='function')updTurn()}
+document.querySelectorAll('#sdir button').forEach(b=>b.onclick=()=>setDir(+b.dataset.d));
+function showGauge(g){
+  $('sfill').style.width=(g*100)+'%';$('sgauge').classList.toggle('off',!S.spinDir);
+  $('spinTxt').textContent=!S.spinDir?'なし':(S.spinDir<0?'左 ':'右 ')+Math.round(g*100)+'%';
+  $('spinBar').classList.toggle('max',S.spinDir!==0&&g>=0.92);
 }
-$('spinR').addEventListener('input',e=>setSpin(e.target.value/100));
-$('spin0').onclick=()=>setSpin(0);
+function setSpin(){setDir(0)}   // 打った後はスピンなしに戻す
 let spinShown=null;
 function updSpinBar(){
   const bar=$('spinBar'),on=S.screen==='play';
   if(on!==spinShown){spinShown=on;bar.style.display=on?'flex':'none';requestAnimationFrame(resize)}
   bar.classList.toggle('dis',!(S.phase==='aim'&&!isCPU(S.turn)));
+  // 2人対戦で赤（上側の人）の番は、バーを画面上部へ移して180°回転（向かい合って遊ぶため）
+  const top=on&&S.mode==='pvp'&&S.turn==='B';
+  if(top!==barTop){barTop=top;const st=$('stage');top?st.before(bar):st.after(bar);bar.classList.toggle('flip',top);requestAnimationFrame(resize)}
 }
+let barTop=false;
 
 // ===== UI =====
 function show(id,on){$(id).classList.toggle('show',on)}
