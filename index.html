@@ -21,7 +21,8 @@ html,body{height:100%;overflow:hidden;background:#245c39;color:var(--ink);font-f
 .iconbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ol)}
 .iconbtn svg{width:20px;height:20px}
 .board{flex:1;position:relative;display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;background:var(--cream);border:3px solid var(--ol);box-shadow:3px 3px 0 var(--ol);overflow:hidden}
-.team{display:flex;align-items:center;gap:6px;font-weight:800;font-size:12px;letter-spacing:.06em;width:64px}
+.team{display:flex;align-items:center;gap:6px;font-weight:800;font-size:12px;letter-spacing:.04em;flex:1;min-width:0}
+.team span:not(.badge){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .team.A{justify-content:flex-end}.team.B{justify-content:flex-start}
 .badge{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--ol)}
 .team.A .badge{background:var(--A)}.team.B .badge{background:var(--B)}
@@ -49,7 +50,8 @@ html,body{height:100%;overflow:hidden;background:#245c39;color:var(--ink);font-f
 #spinBar .sv{font-size:11px;font-weight:800;width:54px;white-space:nowrap;text-align:center;color:var(--mut)}
 #stage{touch-action:none;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;position:relative}
 canvas{touch-action:none;display:block}
-#turn{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:800;padding:4px 14px;border-radius:99px;background:var(--cream);color:var(--ink);border:3px solid var(--ol);box-shadow:2px 2px 0 var(--ol);pointer-events:none;z-index:2;white-space:nowrap}
+#turnRow{flex:none;display:flex;justify-content:center;padding:0 10px 4px;min-height:32px}
+#turn{font-size:13px;font-weight:800;padding:4px 14px;border-radius:99px;background:var(--cream);color:var(--ink);border:3px solid var(--ol);box-shadow:2px 2px 0 var(--ol);pointer-events:none;z-index:2;white-space:nowrap}
 
 /* ---- overlays ---- */
 .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;padding:20px;background:rgba(18,40,26,.55)}
@@ -111,6 +113,33 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
 .ld-ball::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;background:var(--ol);clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)}
 @keyframes ldb{from{transform:translateY(0) rotate(0)}to{transform:translateY(-16px) rotate(180deg)}}
 .ld-txt{font:800 14px "M PLUS Rounded 1c",sans-serif;letter-spacing:.3em;color:#fff;text-shadow:2px 2px 0 var(--ol)}
+/* ---- player settings ---- */
+#menu{overflow-y:auto;align-items:flex-start}
+#menu .card{margin:auto}
+.prow{display:flex;gap:8px;align-items:center;margin-top:6px}
+.picon{width:46px;height:46px;border-radius:50%;border:3px solid var(--ol);flex:none;box-shadow:2px 2px 0 var(--ol);background-size:cover;background-position:center;position:relative;padding:0}
+.picon::after{content:"✎";position:absolute;right:-6px;bottom:-6px;width:20px;height:20px;border-radius:50%;background:var(--yel);border:2px solid var(--ol);font:800 11px/16px sans-serif;color:var(--ol)}
+.pname{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:3px solid var(--ol);font:800 15px "M PLUS Rounded 1c",sans-serif;color:var(--ink);background:#fff}
+.preset{width:34px;height:34px;border-radius:10px;border:2.5px solid var(--ol);background:#fff;font:800 15px sans-serif;flex:none}
+.saverow{display:flex;gap:6px;margin:2px 0 6px}
+.saverow .inp{padding:8px 10px;font-size:13px;letter-spacing:0;text-align:left;text-transform:none}
+.chips button.my{background:#fff7d6}.chips button.my.on{background:var(--yel)}
+.chips button .x{margin-left:6px;padding:0 5px;border-radius:6px;background:rgba(28,43,34,.12);font-size:12px}
+.chips button .x.arm{background:#ff5a5a;color:#fff}
+/* ---- menu pages ---- */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 2px}
+.mbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 6px 12px;border-radius:16px;border:3px solid var(--ol);background:#fff;box-shadow:4px 4px 0 var(--ol);font-family:inherit;color:var(--ink);transition:transform .08s,box-shadow .08s}
+.mbtn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ol)}
+.mbtn .mi{font-size:30px;line-height:1.1;height:64px;display:flex;align-items:center;justify-content:center}
+.mbtn .mi img{width:64px;height:64px;object-fit:contain;filter:drop-shadow(2px 3px 0 rgba(28,43,34,.18))}
+#rIcon img{width:120px;height:120px;object-fit:contain;display:block;margin:-6px auto 0}
+.mbtn b{font-size:13px;font-weight:800;white-space:nowrap}
+.mbtn small{font-size:10.5px;color:var(--mut);font-weight:700}
+.mbtn[data-m="cpu"]{background:#e3f0ff}.mbtn[data-m="pvp"]{background:#ffe6e6}.mbtn[data-m="online"]{background:#e6f9e6}.mbtn[data-m="edit"]{background:#fff4cc}
+.pg{animation:pgin .28s ease}
+@keyframes pgin{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.chips.wrap{flex-wrap:wrap;overflow:visible;padding:2px}
+#diffSeg button{font-size:13px}
 /* ---- banners ---- */
 #banner{position:fixed;left:0;right:0;top:36%;text-align:center;pointer-events:none;z-index:5;display:none}
 #banner.show{display:block}
@@ -138,7 +167,8 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
     </div>
     <button class="iconbtn" id="sndBtn" aria-label="サウンド"></button>
   </header>
-  <div id="stage"><div id="turn">—</div><canvas id="cv"></canvas></div>
+  <div id="turnRow"><div id="turn">—</div></div>
+  <div id="stage"><canvas id="cv"></canvas></div>
   <div id="spinBar">
     <div class="sdir" id="sdir"><button data-d="-1" aria-label="左カーブ">↶</button><button data-d="0" class="on" aria-label="スピンなし">・</button><button data-d="1" aria-label="右カーブ">↷</button></div>
     <div class="srange"><div class="sgauge" id="sgauge"><div class="sfill" id="sfill"></div><div class="smax"></div></div></div>
@@ -147,21 +177,46 @@ h2{font-size:28px;margin-bottom:10px;color:var(--yel);-webkit-text-stroke:2px va
   <div id="formPanel">
     <div class="tabs"><button class="A on" data-t="A"><span class="dotc" style="background:var(--A)"></span><span>青チーム</span></button><button class="B" data-t="B"><span class="dotc" style="background:var(--B)"></span><span>赤チーム</span></button></div>
     <div class="chips" id="chips"></div>
+    <div class="saverow"><input class="inp" id="fsName" maxlength="10" placeholder="この配置に名前をつけて保存" autocomplete="off"><button class="copy" id="fsSave">保存</button></div>
     <div class="hint">駒をドラッグして自陣内で自由に配置（センターサークル内は不可）</div>
     <div class="row"><button class="btn ghost" id="fBack">← 戻る</button><button class="btn" id="fStart">KICK OFF ▶</button></div>
   </div>
 </div>
 
 <div class="overlay show" id="menu"><div class="card">
+ <div class="pg" id="pgTitle">
   <img id="logoImg" alt=""><div class="logo" id="logoBall" style="display:none"><svg viewBox="0 0 64 64"><defs><radialGradient id="bg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#eef2f7"/><stop offset="1" stop-color="#9aa4b1"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="#fff" stroke="#1c2b22" stroke-width="4"/><path d="M32 20l11 8-4 13H25l-4-13z" fill="#1c2b22"/><path d="M32 2v10M58 22l-9 5M50 56l-6-8M14 56l6-8M6 22l9 5" stroke="#1c2b22" stroke-width="4" stroke-linecap="round"/></svg></div>
   <h1 class="dg" id="logoText" style="display:none">SOCCER<br>POOL</h1>
   <div class="tag">5 VS 5 · FLICK FOOTBALL</div>
-  <div class="label">MODE</div>
-  <div class="seg" id="modeSeg"><button data-v="cpu" class="on">CPU対戦</button><button data-v="pvp">2人対戦</button><button data-v="online">オンライン</button></div>
-  <div id="diffWrap"><div class="label">CPU LEVEL</div>
-  <div class="seg" id="diffSeg"><button data-v="easy">弱い</button><button data-v="normal" class="on">普通</button><button data-v="hard">強い</button></div></div>
-  <button class="btn" id="toForm">フォーメーション設定へ ▶</button>
-  <div class="howto"><b>遊び方</b>：自分の駒を後ろに引っ張って離すと反対方向へ。引く距離＝パワー。全駒が止まると相手の番。<b>先に3点</b>で勝利。</div>
+  <div class="label">PLAYER <span style="font-weight:700;letter-spacing:0">（丸をタップでアイコン画像を変更）</span></div>
+  <div class="prow"><button class="picon" id="picon0" aria-label="あなたのアイコンを変更"></button><input class="pname" id="pname0" maxlength="10" placeholder="あなたの名前" autocomplete="off"><button class="preset" id="preset0" aria-label="アイコンを元に戻す">↺</button></div>
+  <input type="file" id="iconFile" accept="image/*" hidden>
+  <button class="btn" id="goMode">スタート ▶</button>
+  <div class="howto"><b>遊び方</b>：駒をタップして選び、画面を引っ張って離すと反対方向へ発射（引く距離＝パワー）。スピンは下のボタンで方向を選び、ゲージを見て離すタイミングで曲がり具合が決まります。<b>先に3点</b>で勝利。</div>
+ </div>
+ <div class="pg" id="pgMode" style="display:none">
+  <h2 class="dg">MODE</h2>
+  <div class="modes">
+    <button class="mbtn" data-m="cpu"><span class="mi">🤖</span><b>CPU対戦</b><small>コンピューターと勝負</small></button>
+    <button class="mbtn" data-m="pvp"><span class="mi">👥</span><b>2人対戦</b><small>1台の端末を交互に</small></button>
+    <button class="mbtn" data-m="online"><span class="mi">🌐</span><b>オンライン</b><small>部屋コードで友だちと</small></button>
+    <button class="mbtn" data-m="edit"><span class="mi">📋</span><b>フォーメーション設定</b><small>自分の配置を作って保存</small></button>
+  </div>
+  <button class="btn ghost" id="modeBack">← タイトルへ</button>
+ </div>
+ <div class="pg" id="pgDetail" style="display:none">
+  <h2 class="dg" id="dTitle">CPU対戦</h2>
+  <div id="dCpu"><div class="label" style="margin-top:0">CPUの強さ</div>
+   <div class="seg" id="diffSeg"><button data-v="easy">弱い</button><button data-v="normal" class="on">普通</button><button data-v="hard">強い</button><button data-v="max">最強</button></div>
+   <div class="sub" id="diffNote" style="margin:6px 0 0;text-align:left"></div></div>
+  <div id="dP2"><div class="label" style="margin-top:0">2Pプレイヤー</div>
+   <div class="prow" id="prow1"><button class="picon" id="picon1" aria-label="2Pのアイコンを変更"></button><input class="pname" id="pname1" maxlength="10" placeholder="2Pの名前" autocomplete="off"><button class="preset" id="preset1" aria-label="アイコンを元に戻す">↺</button></div></div>
+  <div class="label" id="dLabA">あなたのフォーメーション</div><div class="chips wrap" id="dChipsA"></div>
+  <div class="label" id="dLabB">CPUのフォーメーション</div><div class="chips wrap" id="dChipsB"></div>
+  <button class="btn" id="dStart">KICK OFF ▶</button>
+  <button class="btn ghost" id="dEdit">配置を細かく調整する</button>
+  <button class="btn ghost" id="dBack">← モード選択へ</button>
+ </div>
 </div></div>
 
 <div class="overlay" id="online"><div class="card">
@@ -234,13 +289,15 @@ const $=id=>document.getElementById(id);
 // ===== 状態 =====
 const S={mode:'cpu',diff:'normal',forms:{A:null,B:null},preset:{A:'2-2',B:'1-2-1'},
   editTeam:'A',screen:'menu',bodies:[],score:{A:0,B:0},turn:'A',phase:'idle',
-  aim:null,drag:null,steps:0,cpuAim:null,paused:false,gen:0,shake:0,trail:[],ripple:null};
+  aim:null,drag:null,flip:false,steps:0,cpuAim:null,paused:false,gen:0,shake:0,trail:[],ripple:null};
 const P=[]; // particles
 
 function loadForms(){
   try{const d=JSON.parse(localStorage.getItem('soccerpool5')||'null');
     if(d&&d.forms&&d.forms.A&&d.forms.B){S.forms=d.forms;S.preset=d.preset}}catch(e){}
   for(const t of ['A','B'])if(!S.forms[t])S.forms[t]=PRESETS[S.preset[t]].map(p=>p.slice());
+  for(const t of ['A','B']){if(PRESETS[S.preset[t]])S.forms[t]=PRESETS[S.preset[t]].map(p=>p.slice());
+    else S.forms[t].forEach((f,i)=>{if(i>0)S.forms[t][i]=toNorm(t,clampPiece(t,i,toWorld(t,f)))})}   // 旧ルールの保存データを補正
 }
 function saveForms(){try{localStorage.setItem('soccerpool5',JSON.stringify({forms:S.forms,preset:S.preset}))}catch(e){}}
 const toWorld=(t,f)=>t==='A'?{x:f[0]*W,y:f[1]*H}:{x:(1-f[0])*W,y:(1-f[1])*H};
@@ -251,7 +308,7 @@ function makeBodies(){
   const bs=[{x:W/2,y:H/2,vx:0,vy:0,r:BR,m:M_B,ball:true,team:null,n:0,rot:0,spin:0}];
   const FM=(S.mode==='online'&&S.screen!=='form'&&O.forms)?O.forms:S.forms;
   for(const t of ['A','B'])FM[t].forEach((f,i)=>{const p=toWorld(t,f);
-    bs.push({x:p.x,y:p.y,vx:0,vy:0,r:R,m:M_P,ball:false,team:t,n:i+1,spin:0});});
+    const nb={x:p.x,y:p.y,vx:0,vy:0,r:R,m:M_P,ball:false,team:t,n:i+1,spin:0};if(i>0&&!(S.screen==='form'))keepOut(nb);bs.push(nb);});
   return bs;
 }
 function collide(a,b){
@@ -276,7 +333,25 @@ function post(b,px,py){
 }
 // 壁で跳ね返ったとき、その速さを b._w に記録（効果音用）
 function bx_(b,v){b._w=Math.max(b._w||0,Math.abs(v));b.spin*=0.5}
+// ゴールエリア（ボックス内の一番内側の四角）にはGK以外の駒は入れない。ボールとGKは自由。
+const PA_W=190,PA_D=40;   // ゴールエリアの幅と奥行き（ゴールライン〜線まで）
+const ZONES=[{x1:(W-PA_W)/2,x2:(W+PA_W)/2,y1:-200,y2:PA_D},{x1:(W-PA_W)/2,x2:(W+PA_W)/2,y1:H-PA_D,y2:H+200}];
+function keepOut(b){
+  for(const z of ZONES){
+    const cx=Math.max(z.x1,Math.min(b.x,z.x2)),cy=Math.max(z.y1,Math.min(b.y,z.y2));
+    const dx=b.x-cx,dy=b.y-cy,d2=dx*dx+dy*dy;
+    if(d2>=b.r*b.r)continue;
+    if(d2===0){ // 中心がエリア内：いちばん近い辺の外へ出す
+      const l=b.x-z.x1,r=z.x2-b.x,t=b.y-z.y1,u=z.y2-b.y,m=Math.min(l,r,t,u);
+      if(m===l){b.x=z.x1-b.r;b.vx=-Math.abs(b.vx)*REST_WALL}else if(m===r){b.x=z.x2+b.r;b.vx=Math.abs(b.vx)*REST_WALL}
+      else if(m===t){b.y=z.y1-b.r;b.vy=-Math.abs(b.vy)*REST_WALL}else{b.y=z.y2+b.r;b.vy=Math.abs(b.vy)*REST_WALL}
+      continue}
+    const d=Math.sqrt(d2),nx=dx/d,ny=dy/d;b.x=cx+nx*b.r;b.y=cy+ny*b.r;
+    const vn=b.vx*nx+b.vy*ny;if(vn<0){b._w=Math.max(b._w||0,-vn);b.vx-=(1+REST_WALL)*vn*nx;b.vy-=(1+REST_WALL)*vn*ny}
+  }
+}
 function walls(b){
+  if(!b.ball&&b.n!==1)keepOut(b);
   if(b.x<b.r){b.x=b.r;bx_(b,b.vx);b.vx=Math.abs(b.vx)*REST_WALL}
   if(b.x>W-b.r){b.x=W-b.r;bx_(b,b.vx);b.vx=-Math.abs(b.vx)*REST_WALL}
   const inGoal=b.y<0||b.y>H;
@@ -322,7 +397,9 @@ const stopped=bs=>bs.every(b=>b.vx===0&&b.vy===0);
 // ===== CPU =====
 const AI={easy:{pieces:2,rand:5,powers:[.6,1],noise:.2,ghost:1,spins:[0]},
   normal:{pieces:5,rand:10,powers:[.55,.8,1],noise:.12,ghost:3,spins:[0]},
-  hard:{pieces:5,rand:10,powers:[.55,.8,1],noise:.085,ghost:5,spins:[0,-1,1]}};
+  hard:{pieces:5,rand:10,powers:[.55,.8,1],noise:.085,ghost:5,spins:[0,-1,1]},
+  // 最強：候補を大幅に増やし、ブレなし。さらに上位の手について「相手の最善の返し」まで読んで、反撃されにくい手を選ぶ
+  max:{pieces:5,rand:14,powers:[.5,.7,.85,1],noise:0,ghost:5,spins:[0,-1,-.5,.5,1],reply:6}};
 function evaluate(bs,goal,team,bx0,by0){
   if(goal===team)return 1e5;
   if(goal)return -1e5;
@@ -340,39 +417,59 @@ function evaluate(bs,goal,team,bx0,by0){
   if(gk){const oy=team==='A'?H:0;s-=Math.min(20,Math.hypot(gk.x-W/2,gk.y-oy)/12)}
   return s;
 }
-function simulate(idx,ang,pw,team,spin){
-  const bs=S.bodies.map(b=>({...b}));
+// 盤面 base から1手打った結果（止まった後の盤面）を返す
+function simFrom(base,idx,ang,pw,spin){
+  const bs=base.map(b=>({...b}));
   prepShot(bs,idx);const p=bs[idx],v=speedOf(pw);p.vx=Math.cos(ang)*v;p.vy=Math.sin(ang)*v;p.spin=spin||0;
   const bx0=bs[0].x,by0=bs[0].y;let goal=null;
   for(let t=0;t<500;t++){goal=step(bs);if(goal||stopped(bs))break}
-  return evaluate(bs,goal,team,bx0,by0);
+  for(const b of bs){b.vx=0;b.vy=0;b.spin=0}
+  return {bs,goal,bx0,by0};
 }
-function cpuThink(team){
-  const cfg=AI[S.diff],ball=S.bodies[0];
-  let idxs=S.bodies.map((b,i)=>i).filter(i=>S.bodies[i].team===team);
+// 打ち方の候補（駒・角度・パワー・スピン）を列挙
+function candidates(base,team,cfg){
+  const ball=base[0],out=[];
+  let idxs=base.map((b,i)=>i).filter(i=>base[i].team===team);
   idxs.sort(()=>Math.random()-.5);idxs=idxs.slice(0,cfg.pieces);
-  const gy=team==='A'?0:H;
-  const gxs=[W/2,GX1+22,GX2-22,GX1+40,GX2-40].slice(0,cfg.ghost);
-  let best={s:-Infinity,idx:idxs[0],ang:0,pw:.8};
+  const gy=team==='A'?0:H,gxs=[W/2,GX1+22,GX2-22,GX1+40,GX2-40].slice(0,cfg.ghost);
   for(const i of idxs){
-    const p=S.bodies[i],angs=[];
-    for(const gx of gxs){
+    const p=base[i],angs=[];
+    for(const gx of gxs){ // ゴーストボール法：ボールをゴール方向へ押し出す接触点を狙う
       const dx=gx-ball.x,dy=gy-ball.y,l=Math.hypot(dx,dy)||1;
-      const cx=ball.x-dx/l*(R+BR),cy=ball.y-dy/l*(R+BR);
-      angs.push(Math.atan2(cy-p.y,cx-p.x))}
+      angs.push(Math.atan2(ball.y-dy/l*(R+BR)-p.y,ball.x-dx/l*(R+BR)-p.x))}
     angs.push(Math.atan2(ball.y-p.y,ball.x-p.x));
     for(let k=0;k<cfg.rand;k++)angs.push(Math.random()*Math.PI*2);
-    for(const a of angs)for(const pw of cfg.powers)for(const sn of cfg.spins){
-      const s=simulate(i,a,pw,team,sn)+Math.random()*.5;
-      if(s>best.s)best={s,idx:i,ang:a,pw,spin:sn}}
+    for(const a of angs)for(const pw of cfg.powers)for(const sn of cfg.spins)out.push([i,a,pw,sn]);
   }
-  best.ang+=(Math.random()*2-1)*cfg.noise;
-  best.pw=Math.min(1,Math.max(.2,best.pw*(1+(Math.random()*2-1)*cfg.noise)));
-  return best;
+  return out;
+}
+const yieldUI=()=>new Promise(r=>setTimeout(r,0));   // 考え中も画面が固まらないよう、ときどき処理を譲る
+async function cpuThink(team){
+  const cfg=AI[S.diff]||AI.normal,base=S.bodies.map(b=>({...b}));
+  let lt=performance.now();const res=[];
+  const tick=async()=>{if(performance.now()-lt>12){await yieldUI();lt=performance.now()}};
+  for(const c of candidates(base,team,cfg)){
+    const r=simFrom(base,...c);res.push({c,s:evaluate(r.bs,r.goal,team,r.bx0,r.by0)+Math.random()*.5,r});
+    await tick()}
+  res.sort((x,y)=>y.s-x.s);
+  let best=res[0];
+  if(cfg.reply){ // 相手の返しを読む
+    const opp=team==='A'?'B':'A',qc={pieces:5,rand:5,powers:[.6,.85,1],ghost:3,spins:[0]};
+    const top=res.slice(0,cfg.reply);
+    for(const t of top){
+      if(t.r.goal){t.f=t.s;continue}
+      let ob=-Infinity;
+      for(const c of candidates(t.r.bs,opp,qc)){const r2=simFrom(t.r.bs,...c);ob=Math.max(ob,evaluate(r2.bs,r2.goal,opp,r2.bx0,r2.by0));await tick()}
+      t.f=t.s-0.7*Math.min(ob,2000);   // 相手に良い返し（特にゴール）がある手は大きく減点
+    }
+    top.sort((x,y)=>y.f-x.f);best=top[0];
+  }
+  const [idx,ang0,pw0,spin]=best.c;
+  return {idx,ang:ang0+(Math.random()*2-1)*cfg.noise,pw:Math.min(1,Math.max(.2,pw0*(1+(Math.random()*2-1)*cfg.noise))),spin,s:best.s};
 }
 const isCPU=t=>S.mode==='cpu'&&t==='B';
-const label=t=>S.mode==='online'?(O.myTeam?(t===O.myTeam?'YOU':'RIVAL'):(t==='A'?'BLUE':'RED')):S.mode==='cpu'?(t==='A'?'YOU':'CPU'):(t==='A'?'BLUE':'RED');
-const labelJ=t=>S.mode==='online'?(O.myTeam?(t===O.myTeam?'あなた':'相手'):(t==='A'?'青':'赤')):S.mode==='cpu'?(t==='A'?'あなた':'CPU'):(t==='A'?'青':'赤');
+const label=t=>teamName(t);
+const labelJ=t=>((S.mode==='cpu'&&t==='A')||(S.mode==='online'&&O.myTeam&&t===O.myTeam))?'あなた':teamName(t);
 
 // ===== 効果音（Web Audioで合成。音源ファイル不要）=====
 const SND={ac:null,on:true,last:{}};
@@ -430,7 +527,7 @@ function resetKickoff(kick){
   S.bodies=makeBodies();S.turn=kick;S.aim=null;S.cpuAim=null;S.trail=[];beginTurn();
 }
 function startMatch(){
-  S.gen++;S.score={A:0,B:0};updScore();S.screen='play';S.paused=false;
+  S.flip=S.mode==='online'&&O.myTeam==='B';S.gen++;S.score={A:0,B:0};updScore();S.screen='play';S.paused=false;
   $('nA').textContent=label('A');$('nB').textContent=label('B');
   show('formPanel',false);resetKickoff('A');requestAnimationFrame(resize);
 }
@@ -440,7 +537,9 @@ function beginTurn(){
   updTurn();popTurn();
   if(isCPU(S.turn)){
     S.phase='cpu';updTurn();
-    after(650,()=>{const c=cpuThink(S.turn);S.cpuAim={...c,t0:performance.now()};
+    const g=S.gen;
+    after(500,async()=>{const c=await cpuThink(S.turn);if(g!==S.gen||S.screen!=='play')return;
+      S.cpuAim={...c,t0:performance.now()};
       after(650,()=>{if(!S.cpuAim)return;S.cpuAim=null;shoot(c.idx,c.ang,c.pw,c.spin||0)})});
   }
 }
@@ -477,7 +576,8 @@ function endMatch(w){
   S.phase='over';updTurn();
   const me=S.mode==='cpu'?'A':S.mode==='online'?O.myTeam:null;
   const win=!me||w===me;
-  $('rIcon').textContent=win?'🏆':'😵';
+  const ri=IMG[win?'res_win':'res_lose'];
+  if(ri){const c=new Image();c.src=ri.src;c.alt=win?'勝利':'敗北';$('rIcon').replaceChildren(c)}else $('rIcon').textContent=win?'🏆':'😵';
   $('rTitle').textContent=me?(w===me?'YOU WIN!':(S.mode==='cpu'?'CPU WINS':'YOU LOSE')):`${label(w)} WINS!`;
   if(S.mode==='online'){const host=O.role==='host';$('rAgain').textContent=host?'もう一度':'ホストの再開を待っています…';$('rAgain').disabled=!host;
     $('rForm').textContent='ロビーへ';$('rMenu').textContent='部屋を出る'}
@@ -495,10 +595,10 @@ function updScore(team){
 function updTurn(){
   updSpinBar();
   const el=$('turn'),tb=$('turnbar');
-  if(S.screen!=='play'){el.style.display=S.screen==='form'?'block':'none';el.textContent='FORMATION';el.style.background='#fff8e7';el.style.color='#1c2b22';tb.className='turnbar';return}
-  el.style.display='block';tb.className='turnbar '+S.turn;
+  if(S.screen!=='play'){el.style.visibility=S.screen==='form'?'visible':'hidden';el.textContent='FORMATION';el.style.background='#fff8e7';el.style.color='#1c2b22';tb.className='turnbar';return}
+  tb.className='turnbar '+S.turn;
   el.textContent=S.phase==='cpu'?'CPU 思考中…':S.phase==='moving'?'・・・':S.phase==='aim'?`${labelJ(S.turn)}の番｜${S.sel==null?'駒をタップ':(S.spinDir?'引いてゲージを見て離す':'引いて発射')}`:S.phase==='remote'?`${labelJ(S.turn)}の番`:'';
-  el.style.display=el.textContent?'block':'none';
+  el.style.visibility=el.textContent?'visible':'hidden';
   const on=S.phase==='aim'||S.phase==='cpu'||S.phase==='remote';
   el.style.background=on?COL[S.turn]:'#fff8e7';el.style.color=on?'#fff':'#1c2b22';
 }
@@ -516,16 +616,17 @@ function clampPiece(t,i,p){
   const top=t==='B';clampXY(top,p);
   const dx=p.x-W/2,dy=p.y-H/2,d=Math.hypot(dx,dy),min=CENTER_R+R;
   if(d<min){const k=min/(d||1);p.x=W/2+dx*k;p.y=H/2+dy*k;clampXY(top,p)}
+  if(i>0){const tmp={x:p.x,y:p.y,vx:0,vy:0,r:R+1};keepOut(tmp);p.x=tmp.x;p.y=tmp.y;clampXY(top,p)}   // GK以外はペナルティエリア外
   for(let it=0;it<4;it++)S.forms[t].forEach((f,j)=>{if(j===i)return;const q=toWorld(t,f);
     const ex=p.x-q.x,ey=p.y-q.y,e=Math.hypot(ex,ey);
-    if(e<2*R+1){const k=(2*R+1)/(e||1);p.x=q.x+ex*k;p.y=q.y+ey*k;clampXY(top,p)}});
+    if(e<2*R+1){const k=(2*R+1)/(e||1);p.x=q.x+ex*k;p.y=q.y+ey*k;clampXY(top,p);if(i>0){const tmp={x:p.x,y:p.y,vx:0,vy:0,r:R+1};keepOut(tmp);p.x=tmp.x;p.y=tmp.y}}});
   return p;
 }
 function openForm(){
   S.gen++;S.screen='form';S.phase='idle';S.paused=false;S.cpuAim=null;S.trail=[];
   show('menu',false);show('pause',false);show('result',false);$('banner').classList.remove('show');
   S.flip=false;show('online',false);
-  const onl=S.mode==='online';document.querySelector('.tabs button.B').style.display=onl?'none':'';
+  const onl=S.mode==='online'||S.mode==='edit';document.querySelector('.tabs button.B').style.display=onl?'none':'';
   $('fStart').textContent=onl?'決定 ✓':'KICK OFF ▶';
   show('formPanel',true);S.editTeam='A';renderTabs();S.bodies=makeBodies();updTurn();
   requestAnimationFrame(resize);
@@ -534,18 +635,96 @@ function renderTabs(){
   document.querySelectorAll('.tabs button').forEach(b=>{
     b.classList.toggle('on',b.dataset.t===S.editTeam);
     if(b.dataset.t==='B')b.lastChild.textContent=S.mode==='cpu'?'赤（CPU）':'赤チーム';
-    if(b.dataset.t==='A')b.lastChild.textContent=S.mode==='online'?'あなたのチーム':'青チーム'});
-  const ch=$('chips');ch.innerHTML='';
+    if(b.dataset.t==='A')b.lastChild.textContent=S.mode==='online'||S.mode==='edit'?'あなたのフォーメーション':S.mode==='pvp'?'1P（青）':'あなた（青）'});
+  fillChips($('chips'),S.editTeam,{omakase:S.mode==='cpu'&&S.editTeam==='B',del:true,noMine:S.mode==='cpu'&&S.editTeam==='B'});
+}
+// フォーメーション選択ボタン（プリセット・おまかせ・★保存した配置）
+function fillChips(ch,team,{omakase=false,del=false,noMine=false}={}){
+  ch.innerHTML='';
   const names=Object.keys(PRESETS);
-  if(S.mode==='cpu'&&S.editTeam==='B')names.push('おまかせ');
-  if(S.preset[S.editTeam]==='カスタム')names.unshift('カスタム');
+  if(omakase)names.push('おまかせ');
+  if(S.preset[team]==='カスタム')names.unshift('カスタム');
+  const pick=(key,f)=>{S.preset[team]=key;S.forms[team]=f.map(p=>p.slice());sanitizeTeam(team);saveForms();S.bodies=makeBodies();
+    if(S.screen==='form')renderTabs();else renderDetail()};
   for(const k of names){const b=document.createElement('button');b.textContent=k;
-    b.classList.toggle('on',S.preset[S.editTeam]===k);
-    if(k!=='カスタム')b.onclick=()=>{const t=S.editTeam;S.preset[t]=k;
-      const key=k==='おまかせ'?Object.keys(PRESETS)[Math.floor(Math.random()*6)]:k;
-      S.forms[t]=PRESETS[key].map(p=>p.slice());saveForms();S.bodies=makeBodies();renderTabs()};
+    b.classList.toggle('on',S.preset[team]===k);
+    if(k!=='カスタム')b.onclick=()=>pick(k,PRESETS[k==='おまかせ'?Object.keys(PRESETS)[Math.floor(Math.random()*6)]:k]);
+    ch.appendChild(b)}
+  if(noMine)return;
+  for(const m of MYF){const key='★'+m.name,b=document.createElement('button');b.className='my';
+    b.classList.toggle('on',S.preset[team]===key);
+    const tx=document.createElement('span');tx.textContent=key;b.append(tx);
+    let x=null;if(del){x=document.createElement('span');x.className='x';x.textContent='×';b.append(x)}
+    b.onclick=e=>{
+      if(x&&e.target===x){ // 削除は2回タップで確定
+        if(!x.classList.contains('arm')){x.classList.add('arm');x.textContent='削除？';setTimeout(()=>{x.classList.remove('arm');x.textContent='×'},2500);return}
+        MYF.splice(MYF.indexOf(m),1);saveMy();renderTabs();return}
+      pick(key,m.f)};
     ch.appendChild(b)}
 }
+
+// ===== プレイヤー設定（名前・アイコン）とマイフォーメーション =====
+// [0]=自分（2人対戦では1P）、[1]=2人対戦の2P
+const PROF={name:['',''],icon:[null,null],img:[null,null]};
+const cleanName=v=>String(v||'').replace(/[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g,'').trim().slice(0,10);
+const okIcon=u=>typeof u==='string'&&/^data:image\/(jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(u);
+try{const d=JSON.parse(localStorage.getItem('soccerpool5.prof')||'null');
+  if(d){PROF.name=[cleanName(d.name&&d.name[0]),cleanName(d.name&&d.name[1])];PROF.icon=[0,1].map(i=>okIcon(d.icon&&d.icon[i])?d.icon[i]:null)}}catch(e){}
+function saveProf(){try{localStorage.setItem('soccerpool5.prof',JSON.stringify({name:PROF.name,icon:PROF.icon}))}catch(e){}}
+function loadIconImg(i){PROF.img[i]=null;if(!PROF.icon[i]){resize();return}const im=new Image();im.onload=()=>{PROF.img[i]=im;resize()};im.src=PROF.icon[i]}
+function teamName(t){
+  if(S.mode==='online'){if(!O.myTeam)return t==='A'?'BLUE':'RED';return t===O.myTeam?(PROF.name[0]||'YOU'):(O.oppName||'RIVAL')}
+  if(S.mode==='cpu')return t==='A'?(PROF.name[0]||'YOU'):'CPU';
+  return t==='A'?(PROF.name[0]||'P1'):(PROF.name[1]||'P2');
+}
+function teamIcon(t){   // その駒に使うアイコン画像（なければ null＝通常の駒）
+  if(S.mode==='online'&&S.screen!=='form'){if(!O.myTeam)return null;return t===O.myTeam?PROF.img[0]:O.oppImg}
+  if(S.mode==='pvp')return PROF.img[t==='A'?0:1];
+  return t==='A'?PROF.img[0]:null;
+}
+// 画像ファイル → 中央を正方形に切り抜き 256px の JPEG に
+let iconTarget=0;
+function readIcon(file,i){
+  if(!file||!/^image\//.test(file.type))return;
+  const url=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{const sz=Math.min(im.width,im.height),c=mkCanvas(256,256),x=c.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,256,256);
+    x.drawImage(im,(im.width-sz)/2,(im.height-sz)/2,sz,sz,0,0,256,256);
+    PROF.icon[i]=c.toDataURL('image/jpeg',.85);URL.revokeObjectURL(url);saveProf();loadIconImg(i);renderProf()};
+  im.onerror=()=>URL.revokeObjectURL(url);im.src=url;
+}
+// オンライン送信用の小さいアイコン（通信1件あたりの容量制限に収める）
+function smallIcon(){
+  const im=PROF.img[0];if(!im)return null;
+  for(const [sz,q] of [[48,.7],[40,.6],[32,.55],[26,.5]]){const c=mkCanvas(sz,sz);c.getContext('2d').drawImage(im,0,0,sz,sz);const u=c.toDataURL('image/jpeg',q);if(u.length<1500)return u}
+  return null;
+}
+function renderProf(){
+  for(const i of [0,1]){const b=$('picon'+i);
+    if(PROF.icon[i]){b.style.backgroundImage=`url(${PROF.icon[i]})`;b.style.backgroundColor='#fff'}
+    else{b.style.backgroundImage='';b.style.backgroundColor=i?COL.B:COL.A}
+    $('preset'+i).style.visibility=PROF.icon[i]?'visible':'hidden';
+    const inp=$('pname'+i);if(document.activeElement!==inp)inp.value=PROF.name[i]}
+}
+for(const i of [0,1]){
+  $('picon'+i).onclick=()=>{iconTarget=i;$('iconFile').click()};
+  $('preset'+i).onclick=()=>{PROF.icon[i]=null;saveProf();loadIconImg(i);renderProf()};
+  $('pname'+i).addEventListener('input',e=>{PROF.name[i]=cleanName(e.target.value);saveProf()});
+}
+$('iconFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];readIcon(f,iconTarget);e.target.value=''});
+
+// マイフォーメーション（自陣視点の座標で保存するので、どちらのチームにも使える）
+let MYF=[];
+try{MYF=(JSON.parse(localStorage.getItem('soccerpool5.myforms')||'[]')||[]).filter(m=>m&&validForm(m.f)).map(m=>({name:cleanName(m.name)||'マイ',f:m.f})).slice(0,12)}catch(e){MYF=[]}
+function saveMy(){try{localStorage.setItem('soccerpool5.myforms',JSON.stringify(MYF))}catch(e){}}
+function sanitizeTeam(t){S.forms[t].forEach((f,i)=>{if(i>0)S.forms[t][i]=toNorm(t,clampPiece(t,i,toWorld(t,f)))})}
+$('fsSave').onclick=()=>{
+  const t=S.editTeam,nm=cleanName($('fsName').value)||('マイ'+(MYF.length+1));
+  const ex=MYF.find(m=>m.name===nm),f=S.forms[t].map(p=>p.slice());
+  if(ex)ex.f=f;else{if(MYF.length>=12){$('fsSave').textContent='上限12件';setTimeout(()=>$('fsSave').textContent='保存',1500);return}MYF.push({name:nm,f})}
+  saveMy();S.preset[t]='★'+nm;saveForms();$('fsName').value='';renderTabs();
+  $('fsSave').textContent='保存済み';setTimeout(()=>$('fsSave').textContent='保存',1300);
+};
 
 // ===== エフェクト =====
 function burst(x,y,c,n,dir,spread){
@@ -584,6 +763,8 @@ const ASSETS={
   ball:'assets/ball.png', grass:'assets/grass.jpg',
   menuBg:'assets/menu_bg.jpg', logo:'assets/logo.png',
   wood:'assets/wood.jpg', net:'assets/net.jpg',
+  mode_cpu:'assets/mode_cpu.png', mode_pvp:'assets/mode_pvp.png', mode_online:'assets/mode_online.png', mode_edit:'assets/mode_edit.png',
+  res_win:'assets/res_win.png', res_lose:'assets/res_lose.png', res_draw:'assets/res_draw.png',
 };
 const IMG={};
 function loadAssets(){
@@ -596,6 +777,7 @@ function loadAssets(){
     const im=new Image();
     im.onload=()=>{IMG[k]=im;
       if(k==='menuBg')$('menu').style.backgroundImage=`url(${src})`;
+      else if(k.startsWith('mode_')){const el=document.querySelector(`.mbtn[data-m="${k.slice(5)}"] .mi`);if(el){const c=new Image();c.src=src;c.alt='';el.replaceChildren(c)}}
       else if(k==='logo'){const l=$('logoImg');l.src=src;l.style.display='block';$('logoText').style.display='none';$('logoBall').style.display='none'}
       done()};
     im.onerror=()=>{if(k==='logo'){$('logoText').style.display='';$('logoBall').style.display=''}done()};
@@ -668,6 +850,13 @@ function buildField(){
     c.fillStyle='#fff';c.beginPath();c.arc(W/2,y0+s*62,2.6,0,7);c.fill();
   }
   for(const [x,y,a] of [[6,6,0],[W-6,6,.5],[W-6,H-6,1],[6,H-6,1.5]]){c.beginPath();c.arc(x,y,10,a*Math.PI,(a+.5)*Math.PI);c.stroke()}
+  // GK以外進入禁止エリアの斜線と表示
+  for(const top of [true,false]){const y0=top?6:H-PA_D,x0=(W-PA_W)/2+1.5;
+    c.save();c.beginPath();c.rect(x0,y0,PA_W-3,PA_D-6);c.clip();
+    c.strokeStyle='rgba(255,255,255,.13)';c.lineWidth=5;c.beginPath();
+    for(let k=-PA_D;k<PA_W+PA_D;k+=16){c.moveTo(x0+k,y0);c.lineTo(x0+k+PA_D,y0+PA_D)}c.stroke();c.restore();
+    c.save();c.translate(W/2+(top?52:-52),top?23:H-23);if(top)c.rotate(Math.PI);
+    c.fillStyle='rgba(255,255,255,.35)';c.font='9px "Dela Gothic One"';c.textAlign='center';c.textBaseline='middle';c.fillText('GK ONLY',0,0);c.restore()}
   c.fillStyle='#fff';c.beginPath();c.arc(W/2,H/2,3.2,0,7);c.fill();
   c.restore();
   // ゴール
@@ -690,10 +879,21 @@ function buildField(){
     for(const x of [GX1,GX2]){const y=top?0:H;c.fillStyle='#fff';c.beginPath();c.arc(x,y,POST+.8,0,7);c.fill();c.strokeStyle=OL;c.lineWidth=2;c.stroke()}
   }
 }
+let ICONON={A:false,B:false};
 function buildSprites(){
   const S2=(R+3)*2;
+  ICONON={A:false,B:false};
   const make=(team,gk)=>{const cnv=mkCanvas(S2*K,S2*K),c=cnv.getContext('2d');
     c.setTransform(K,0,0,K,(R+3)*K,(R+3)*K);
+    const ic=teamIcon(team);
+    if(ic){ // 自分のアイコン：外枠はチームカラー（GKは金）、内側に画像
+      c.fillStyle=OL;c.beginPath();c.arc(0,0,R,0,7);c.fill();
+      celDisc(c,R-2.5,gk?'#ffd43b':COL[team],gk?'#e0a800':SHADE[team],2.4);
+      const ir=R*.72;c.fillStyle=OL;c.beginPath();c.arc(0,0,ir+1.5,0,7);c.fill();
+      if(gk){c.strokeStyle=COL[team];c.lineWidth=1.6;c.beginPath();c.arc(0,0,ir+3.2,0,7);c.stroke()}
+      c.save();c.beginPath();c.arc(0,0,ir,0,7);c.clip();c.drawImage(ic,-ir,-ir,2*ir,2*ir);c.restore();
+      c.fillStyle='rgba(255,255,255,.85)';c.beginPath();c.ellipse(-R*.55,-R*.55,2.6,1.4,-.8,0,7);c.fill();
+      ICONON[team]=true;return cnv}
     const img=IMG[(gk?'gk':'piece')+team];
     if(img){c.save();c.beginPath();c.arc(0,0,R,0,7);c.clip();c.drawImage(img,-R,-R,2*R,2*R);c.restore();
       c.strokeStyle=OL;c.lineWidth=2.5;c.beginPath();c.arc(0,0,R-1,0,7);c.stroke();return cnv}
@@ -738,7 +938,12 @@ function drawPiece(b,dim,glow,sel,t){
     ctx.beginPath();ctx.arc(b.x,b.y,R+6,0,7);ctx.stroke();ctx.lineWidth=3;ctx.strokeStyle=LIGHT[b.team];ctx.stroke();ctx.restore()}
   ctx.save();ctx.translate(b.x,b.y);if(S.flip)ctx.rotate(Math.PI);ctx.drawImage(SPR[(b.n===1?'G':'')+b.team],-half,-half,half*2,half*2);ctx.restore();
   if(sel){ctx.beginPath();ctx.arc(b.x,b.y,R*sc+4,0,7);ctx.lineWidth=5;ctx.strokeStyle=OL;ctx.stroke();ctx.lineWidth=3;ctx.strokeStyle='#ffd43b';ctx.stroke()}
-  const iv=invText(b);outlinedText(b.n===1?'GK':String(b.n),b.x,b.y+(S.flip!==iv?-1:1),(b.n===1?'10px':'13px')+' "Dela Gothic One"','#fff',3,iv);
+  const iv=invText(b);
+  if(ICONON[b.team]){ // アイコン駒は番号を右下の小さなバッジに
+    const sg=(S.flip!==iv)?-1:1,bx=b.x+sg*R*.66,by=b.y+sg*R*.66;
+    ctx.fillStyle=b.n===1?'#ffd43b':COL[b.team];ctx.beginPath();ctx.arc(bx,by,7.5,0,7);ctx.fill();ctx.strokeStyle=OL;ctx.lineWidth=2;ctx.stroke();
+    outlinedText(b.n===1?'GK':String(b.n),bx,by+.5,(b.n===1?'6px':'9px')+' "Dela Gothic One"','#fff',2,iv);
+  }else outlinedText(b.n===1?'GK':String(b.n),b.x,b.y+(S.flip!==iv?-1:1),(b.n===1?'10px':'13px')+' "Dela Gothic One"','#fff',3,iv);
   ctx.globalAlpha=1;
 }
 function drawBall(b){
@@ -930,16 +1135,38 @@ let barTop=false;
 function show(id,on){$(id).classList.toggle('show',on)}
 function seg(id,key,cb){document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{
   document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.toggle('on',x===b));S[key]=b.dataset.v;cb&&cb()})}
-seg('modeSeg','mode',()=>{$('diffWrap').style.display=S.mode==='cpu'?'':'none';$('toForm').textContent=S.mode==='online'?'オンライン対戦へ ▶':'フォーメーション設定へ ▶'});
-seg('diffSeg','diff');
+seg('diffSeg','diff',()=>{$('diffNote').textContent=DIFF_NOTE[S.diff]||''});
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{S.editTeam=b.dataset.t;renderTabs()});
 function toMenu(){S.gen++;S.flip=false;if(typeof O!=='undefined'&&O.nr){return onlineLeave()}S.screen='menu';S.cpuAim=null;S.phase='idle';S.paused=false;S.trail=[];
   show('pause',false);show('result',false);show('formPanel',false);show('menu',true);$('banner').classList.remove('show');
-  S.score={A:0,B:0};updScore();updTurn();S.bodies=makeBodies();requestAnimationFrame(resize)}
-$('toForm').onclick=()=>S.mode==='online'?openOnline():openForm();
-$('fBack').onclick=()=>S.mode==='online'?backToLobby():toMenu();
+  S.score={A:0,B:0};updScore();updTurn();S.bodies=makeBodies();showPage('pgMode');requestAnimationFrame(resize)}
+// ---- メニュー：タイトル ▶ モード選択 ▶ 詳細設定 ----
+function showPage(id){for(const pg of ['pgTitle','pgMode','pgDetail'])$(pg).style.display=pg===id?'':'none';show('menu',true);$('menu').scrollTop=0}
+const DIFF_NOTE={easy:'のんびり。狙いが大きくぶれます',normal:'ほどよい強さ',hard:'スピンも使う上級者',max:'相手の返しまで読む最強CPU（考える時間が少し長め）'};
+function renderDetail(){
+  const cpu=S.mode==='cpu';
+  $('dTitle').textContent=cpu?'CPU対戦':'2人対戦';
+  $('dCpu').style.display=cpu?'':'none';$('dP2').style.display=cpu?'none':'';
+  $('diffNote').textContent=DIFF_NOTE[S.diff]||'';
+  $('dLabA').textContent=cpu?'あなたのフォーメーション':`1P（${teamName('A')}）のフォーメーション`;
+  $('dLabB').textContent=cpu?'CPUのフォーメーション':`2P（${teamName('B')}）のフォーメーション`;
+  fillChips($('dChipsA'),'A',{});fillChips($('dChipsB'),'B',{omakase:cpu,noMine:cpu});
+  renderProf();
+}
+function openDetail(){S.screen='menu';renderDetail();showPage('pgDetail')}
+$('goMode').onclick=()=>showPage('pgMode');
+$('modeBack').onclick=()=>showPage('pgTitle');
+document.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{
+  const m=b.dataset.m;S.mode=m;resize();
+  if(m==='online')openOnline();else if(m==='edit')openForm();else openDetail()});
+$('dBack').onclick=()=>showPage('pgMode');
+$('dEdit').onclick=openForm;
+$('dStart').onclick=()=>{show('menu',false);$('fStart').onclick()};
+$('pname1').addEventListener('input',()=>{if($('pgDetail').style.display!=='none')renderDetail()});
+$('fBack').onclick=()=>S.mode==='online'?backToLobby():S.mode==='edit'?toMenu():(show('formPanel',false),openDetail());
 $('fStart').onclick=()=>{
   if(S.mode==='online'){saveForms();onlinePres({form:S.forms.A});return backToLobby()}
+  if(S.mode==='edit'){saveForms();return toMenu()}
   if(S.mode==='cpu'&&S.preset.B==='おまかせ')S.forms.B=PRESETS[Object.keys(PRESETS)[Math.floor(Math.random()*6)]].map(p=>p.slice());
   startMatch()};
 $('menuBtn').onclick=()=>{
@@ -956,7 +1183,7 @@ $('rForm').onclick=()=>S.mode==='online'?backToLobby():openForm();
 // ===== オンライン対戦（claude.ai の room 機能）=====
 // 同期方式：各プレイヤーは自分の presence に「試合開始情報 start」と「最新ショット last」を載せる。
 // last には打つ直前の全駒座標と速度ベクトルを含め、受信側は同じ状態から同じ物理計算をするので結果が一致する。
-const O={nr:null,code:'',role:null,myTeam:null,ready:false,epoch:0,n:0,last:null,forms:null,unsub:[],opp:null,myPeer:null,conn:false};
+const O={nr:null,code:'',role:null,myTeam:null,ready:false,epoch:0,n:0,last:null,forms:null,unsub:[],opp:null,myPeer:null,conn:false,oppName:'',oppIcon:null,oppImg:null};
 // 通信の方式は2つ：claude.ai 上では room 機能、それ以外（GitHub Pages など）では PeerJS による P2P 接続。
 let ROOM=null,ROOM_STATE='wait',NET='claude';
 try{if(window.claude&&claude.use)claude.use('room').then(r=>{if(r){ROOM=r;ROOM_STATE='ok'}else usePeer()}).catch(usePeer);else usePeer()}catch(e){usePeer()}
@@ -1039,9 +1266,9 @@ async function onlineJoin(code,role){
   const EM={notfound:'その部屋は見つかりませんでした。コードを確認してください',full:'その部屋は満員です',timeout:'接続がタイムアウトしました',
     'unavailable-id':'その部屋コードは使用中です。もう一度「部屋を作る」を押してください'};
   let nr;try{nr=await ROOM.join('sp5-'+code,role)}catch(e){const c=e&&e.code||'error';return onMsg(EM[c]||'接続できませんでした（'+c+'）',true)}
-  O.nr=nr;O.code=code;O.role=role;O.myTeam=role==='guest'?'B':'A';O.ready=false;O.epoch=0;O.n=0;O.last=null;O.forms=null;O.opp=null;
+  O.nr=nr;O.code=code;O.role=role;O.myTeam=role==='guest'?'B':'A';O.ready=false;O.epoch=0;O.n=0;O.last=null;O.forms=null;O.opp=null;O.oppName='';O.oppIcon=null;O.oppImg=null;
   try{localStorage.setItem('soccerpool5.online',JSON.stringify({code,role,t:Date.now()}))}catch(e){}
-  onlinePres({v:1,role,form:S.forms.A,ready:false,start:null,last:null});
+  onlinePres({v:1,role,form:S.forms.A,ready:false,start:null,last:null,name:cleanName(PROF.name[0]),icon:smallIcon()});
   O.unsub.push(nr.onPeers(()=>onlineSync(),()=>{}));
   O.unsub.push(nr.onConnection(c=>{O.conn=c;updLobby()},()=>{}));
   S.mode='online';showLobby();
@@ -1074,9 +1301,10 @@ function updLobby(){
   let h='';
   if(myRole==='spec'){h=row('A','ホスト','',false,!O.opp)}
   else{
-    h+=row(O.myTeam,'あなた',myRole==='host'?'ホスト':'ゲスト',O.ready,false);
+    const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    h+=row(O.myTeam,'あなた'+(PROF.name[0]?'（'+esc(PROF.name[0])+'）':''),myRole==='host'?'ホスト':'ゲスト',O.ready,false);
     const ot=O.myTeam==='A'?'B':'A';
-    h+=opp?row(ot,'相手',opp.presence.role==='host'?'ホスト':'ゲスト',!!opp.presence.ready,false):row(ot,'相手を待っています…','',false,true);
+    h+=opp?row(ot,O.oppName?esc(O.oppName):'相手',opp.presence.role==='host'?'ホスト':'ゲスト',!!opp.presence.ready,false):row(ot,'相手を待っています…','',false,true);
   }
   $('onPlayers').innerHTML=h;
   $('onReady').style.display=myRole==='spec'?'none':'';$('onForm').style.display=myRole==='spec'?'none':'';
@@ -1095,6 +1323,13 @@ function onlineSync(){
   if(O.role==='guest'&&os.some(p=>p.presence.role==='guest'&&!p.isMe&&O.myPeer&&p.peer<O.myPeer)){O.role='spec';O.myTeam=null;onlinePres({role:'spec',ready:false});}
   const want=O.role==='host'?'guest':'host';
   O.opp=O.role==='spec'?(os.find(p=>p.presence.role==='host')||null):(os.find(p=>p.presence.role===want&&!p.isMe)||null);
+  // 相手の名前とアイコン（受け取ったデータは検証してから使う）
+  if(O.role!=='spec'){
+    const nm=O.opp?cleanName(O.opp.presence.name):'';
+    const ic=O.opp&&okIcon(O.opp.presence.icon)&&O.opp.presence.icon.length<2200?O.opp.presence.icon:null;
+    if(nm!==O.oppName){O.oppName=nm;if(S.screen==='play'){$('nA').textContent=label('A');$('nB').textContent=label('B')}}
+    if(ic!==O.oppIcon){O.oppIcon=ic;O.oppImg=null;if(ic){const im=new Image();im.onload=()=>{if(O.oppIcon===ic){O.oppImg=im;resize()}};im.src=ic}else resize()}
+  }
   // 試合開始・最新ショットの同期
   let st=null,lt=null;
   for(const p of os){const pr=p.presence;
@@ -1156,7 +1391,7 @@ $('onCopy').onclick=()=>{try{navigator.clipboard.writeText(O.code).then(()=>{$('
 document.addEventListener('pointerdown',()=>audio(),{passive:true});
 document.addEventListener('click',e=>{if(e.target.closest('button')&&e.target.closest('button').id!=='sndBtn')SE.ui()});
 $('sndBtn').onclick=()=>setSound(!SND.on);$('sndBtn').innerHTML=SND.on?SVG_ON:SVG_OFF;
-loadForms();loadAssets();S.bodies=makeBodies();resize();updTurn();requestAnimationFrame(loop);
+loadForms();loadAssets();renderProf();loadIconImg(0);loadIconImg(1);S.bodies=makeBodies();resize();updTurn();requestAnimationFrame(loop);
 })();
 </script>
 </body>
