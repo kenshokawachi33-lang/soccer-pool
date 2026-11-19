@@ -333,11 +333,14 @@ function post(b,px,py){
 }
 // 壁で跳ね返ったとき、その速さを b._w に記録（効果音用）
 function bx_(b,v){b._w=Math.max(b._w||0,Math.abs(v));b.spin*=0.5}
-// ゴールエリア（ボックス内の一番内側の四角）にはGK以外の駒は入れない。ボールとGKは自由。
+// 自陣のゴールエリア（ボックス内の一番内側の四角）にはGK以外の味方は入れない（ゴール前に固めて守るのを防ぐ）。
+// 相手ゴールのエリアには攻め込める。ボールとGKはどこでも自由。
 const PA_W=190,PA_D=40;   // ゴールエリアの幅と奥行き（ゴールライン〜線まで）
 const ZONES=[{x1:(W-PA_W)/2,x2:(W+PA_W)/2,y1:-200,y2:PA_D},{x1:(W-PA_W)/2,x2:(W+PA_W)/2,y1:H-PA_D,y2:H+200}];
 function keepOut(b){
-  for(const z of ZONES){
+  // 青(A)の自陣ゴールは下、赤(B)は上。チーム不明（配置編集の仮の駒）は両方を判定
+  const zs=b.team==='A'?[ZONES[1]]:b.team==='B'?[ZONES[0]]:ZONES;
+  for(const z of zs){
     const cx=Math.max(z.x1,Math.min(b.x,z.x2)),cy=Math.max(z.y1,Math.min(b.y,z.y2));
     const dx=b.x-cx,dy=b.y-cy,d2=dx*dx+dy*dy;
     if(d2>=b.r*b.r)continue;
